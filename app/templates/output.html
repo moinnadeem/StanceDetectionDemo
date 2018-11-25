@@ -6,8 +6,15 @@
     <title>Stance Detection Demo</title>
   </head>
   <body>
-    <p>Claim: {{ data.claim }}</p>
-    <p>Document: {{ data.document }}</p>
+    {% for datum in data %}
+    <p><b>Claim:</b> {{ datum.claim }}</p>
+    <p><b>Document:</b> {{ datum.document }}</p>
+    <p><b>Related Unrelated Pred:</b> {{ datum.related_unrelated_pred }}</p>
+    <p><b>Related Unrelated Logits:</b> {{ datum.related_unrelated_logit }}</p>
+    <p><b>Three Label Pred:</b> {{ datum.three_label_pred }}</p>
+    <p><b>Three Label Logits:</b> {{ datum.three_label_logit }}</p>
+    <br>
+    {% endfor %}
   </body>
 </html>
 {% endblock %}

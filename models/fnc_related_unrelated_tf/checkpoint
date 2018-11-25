@@ -1,0 +1,2 @@
+model_checkpoint_path: "fnc_related_unrelated_tf"
+all_model_checkpoint_paths: "fnc_related_unrelated_tf"
