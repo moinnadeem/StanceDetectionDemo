@@ -2,16 +2,23 @@
 
 {% block content %}
 <html>
-  <h1>Model Inputs</h1>
+  <h1>Stance Detector Model</h1>
+  <h2>Introduction</h2>
+  <p>
+    State of the art model trained on data from the Fake News Challenge <br>
+    supplemented with data from the Fact Extraction and VERification <br>
+    dataset using adversarial domain adaptation. <br>
+  </p>
+  <h2>Demo</h2>
   <form action="" method="post" novalidate>
     {{ form.hidden_tag() }}
+    <p>{{ form.claim.label }}<p>
     <p>
-      {{ form.claim.label }}<br>
-      {{ form.claim(size=32) }}
+      {{ form.claim(rows="2", cols="80") }}
     </p>
+    <p>{{ form.document.label }}<p>
     <p>
-      {{ form.document.label }}<br>
-      {{ form.document(size=64) }}
+      {{ form.document(rows="16", cols="80") }}
     </p>
     <p>{{ form.submit() }}</p>
   </form>
