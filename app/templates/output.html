@@ -1,12 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<html>
-  <head>
-    <title>Stance Detection Demo</title>
-  </head>
-  <body>
-    {% for datum in data %}
+  {% for datum in data %}
     <p><b>Claim:</b> {{ datum.claim }}</p>
     <p><b>Document:</b> {{ datum.document }}</p>
     <p><b>Related Unrelated Pred:</b> {{ datum.related_unrelated_pred }}</p>
@@ -14,8 +9,6 @@
     <p><b>Three Label Pred:</b> {{ datum.three_label_pred }}</p>
     <p><b>Three Label Logits:</b> {{ datum.three_label_logit }}</p>
     <br>
-    {% endfor %}
-  </body>
-</html>
-{% endblock %}
+  {% endfor %}
+{% endblock content %}
 
