@@ -183,8 +183,8 @@ def run_model(claim_doc_feat_vectors, claim_seqs_padded, document_seqs_padded, e
             plogits = [[plogit[0], plogit[1], plogit[2]] for plogit in plogits]
             three_label_logits.extend(plogits)
         
-    related_unrelated_preds = ["unrelated" if related_unrelated_preds[i] == 3 else "related" for i in range(len(related_unrelated_preds))]
-    three_label_preds = ["agree" if three_label_preds[i] == 0 else "disagree" if three_label_preds[i] == 1 else "discuss" for i in range(len(three_label_preds))]
+    related_unrelated_preds = ["Unrelated" if related_unrelated_preds[i] == 3 else "Related" for i in range(len(related_unrelated_preds))]
+    three_label_preds = ["Agree" if three_label_preds[i] == 0 else "Disagree" if three_label_preds[i] == 1 else "Discuss" for i in range(len(three_label_preds))]
 
     return claims, documents, related_unrelated_preds, related_unrelated_logits, three_label_preds, three_label_logits
 
