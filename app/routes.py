@@ -24,10 +24,10 @@ def parse_response(response):
     "document": response[1][0],
     "related_unrelated_pred": response[2][0],
     "related_unrelated_logit": round_decimals(response[3][0]),
-    "related_unrelated_strengths": compute_strengths(response[3][0]),
     "three_label_pred": response[4][0],
     "three_label_logit": round_decimals(response[5][0]),
-    "three_label_strengths": compute_strengths(response[5][0])
+    "color": determine_color(response[3][0], response[5][0]),
+    "logit_colors": get_logit_colors(response[3][0] + response[5][0]) 
   }
 
   data['sentence_data'] = []
@@ -38,10 +38,10 @@ def parse_response(response):
         "sentence": response[1][i],
         "related_unrelated_pred": response[2][i],
         "related_unrelated_logit": round_decimals(response[3][i]),
-        "related_unrelated_strengths": compute_strengths(response[3][i]),
         "three_label_pred": response[4][i],
         "three_label_logit": round_decimals(response[5][i]),
-        "three_label_strengths": compute_strengths(response[5][i])
+        "color": determine_color(response[3][i], response[5][i]),
+        "logit_colors": get_logit_colors(response[3][i] + response[5][i])
       })
 
   return data;
@@ -49,11 +49,33 @@ def parse_response(response):
 def round_decimals(logits):
     return [round(logit, 2) for logit in logits]
 
-def compute_strengths(logits):
-  # 0: [0,0.2) 1: [0.2,0.4) 2: [0.4,0.6) 3: [0.6,0.8) 4: [0.8,1.0] 
-  strengths = []
-  for logit in logits:
-    strengths.append(int(logit//0.2))
-  return strengths
-      
+def determine_color(rulogits, addlogits):
+    colors = get_logit_colors(rulogits + addlogits)
+    if rulogits[1] >= rulogits[0]:
+        return colors[1]
+    else:
+        if addlogits[0] >= addlogits[1]:
+            if addlogits[0] >= addlogits[2]:
+                return colors[2]
+            else:
+                return colors[4]
+        else:
+            if addlogits[1] >= addlogits[2]:
+                return colors[3]
+            else:
+                return colors[4]
+    
+def intensity(logit):
+    return int(logit//0.2) + 1;
+
+def get_logit_colors(logits):
+    # related, unrelated, agree, disagree, discuss
+    base_colors = [None, "grey", 'blue', 'red', 'purple']
+    colors = []
+    for i in range(len(logits)):
+        if base_colors[i] is None:
+            colors.append("")
+            continue
+        colors.append(base_colors[i] + str(intensity(logits[i])))
+    return colors
 

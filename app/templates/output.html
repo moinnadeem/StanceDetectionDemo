@@ -1,172 +1,90 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h2> Overall Prediction </h2>
-  <p><b>Claim:</b> {{ data.overall_data.claim }}</p>
-  <p><b>Document:</b> {{ data.overall_data.document }}</p>
-  <!--<p><b>Related Unrelated Pred:</b> {{ data.overall_data.related_unrelated_pred }}</p>-->
-  <div class="prediction"> 
-    <div>
-      <b>Predicted Stance:</b>
-      {% if data.overall_data.related_unrelated_pred == "Unrelated" %}
-        {{ data.overall_data.related_unrelated_pred }}
-      {% else %}
-        {{ data.overall_data.three_label_pred }}
-      {% endif %}
-    </div>
-  </div> 
-  
-  <div class="logits">  
-    {% if data.overall_data.related_unrelated_pred == "Unrelated" %}
-      <div class="logit_box bold">
-        <div class="logit_label">
-          Unrelated
-        </div>
-        <div class="logit_val">
-          {{ data.overall_data.related_unrelated_logit[1] }}
-        </div>
-      </div>
-      {% else %}
-      <div class="logit_box">
-        <div class="logit_label">
-          Unrelated
-        </div>
-        <div class="logit_val">
-          {{ data.overall_data.related_unrelated_logit[1] }}
-        </div>
-      </div>
-    {% endif %}
- 
-    {% if data.overall_data.related_unrelated_pred == "Related" %}
-      <div class="logit_box last_logit_box bold">
-        <div class="logit_label">
-          Related
-        </div>
-        <div class="logit_val">
-          {{ data.overall_data.related_unrelated_logit[0] }}
-        </div>
-      </div>
-      {% else %}
-      <div class="logit_box last_logit_box">
-        <div class="logit_label">
-          Related
-        </div>
-        <div class="logit_val">
-          {{ data.overall_data.related_unrelated_logit[0] }}
-        </div>
-      </div>
-    {% endif %}
 
-    {% if data.overall_data.related_unrelated_pred == "Related" %}
-      <div class="logit_box" id="empty_box">
-      </div>
-      
-      {% if data.overall_data.three_label_pred == "Agree" %}
-        <div class="logit_box bold">
-          <div class="logit_label">
-            Agree
-          </div>
-          <div class="logit_val">
-            {{ data.overall_data.three_label_logit[0] }}
-          </div>
-        </div>
-      {% else %}
-        <div class="logit_box">
-          <div class="logit_label">
-            Agree
-          </div>
-          <div class="logit_val">
-            {{ data.overall_data.three_label_logit[0] }}
-          </div>
-        </div>
-      {% endif %}
+  <h2> Color Key </h2>
+  <div class="key">
+    <div class="key_label">Unrelated</div>
+    <div class="key_box grey1">weakly</div> 
+    <div class="key_box grey2"></div> 
+    <div class="key_box grey3"></div> 
+    <div class="key_box grey4"></div>
+    <div class="key_box last_key_box grey5">strongly</div>
+    <br>
+    <br>
+    
+    <div class="key_label">Agree</div>
+    <div class="key_box blue1">weakly</div> 
+    <div class="key_box blue2"></div> 
+    <div class="key_box blue3"></div> 
+    <div class="key_box blue4"></div>
+    <div class="key_box last_key_box blue5">strongly</div>
+    <br>
+    <br>
+    
+    <div class="key_label">Discuss</div>
+    <div class="key_box purple1">weakly</div> 
+    <div class="key_box purple2"></div> 
+    <div class="key_box purple3"></div> 
+    <div class="key_box purple4"></div>
+    <div class="key_box last_key_box purple5">strongly</div>
+    <br>
+    <br>
 
-      {% if data.overall_data.three_label_pred == "Discuss" %}
-        <div class="logit_box bold">
-          <div class="logit_label">
-            Discuss
-          </div>
-          <div class="logit_val">
-            {{ data.overall_data.three_label_logit[2] }}
-          </div>
-        </div>
-      {% else %}
-        <div class="logit_box">
-          <div class="logit_label">
-            Discuss
-          </div>
-          <div class="logit_val">
-            {{ data.overall_data.three_label_logit[2] }}
-          </div>
-        </div>
-      {% endif %}
-      
-      {% if data.overall_data.three_label_pred == "Disagree" %}
-        <div class="logit_box last_logit_box bold">
-          <div class="logit_label">
-            Disagree
-          </div>
-          <div class="logit_val">
-            {{ data.overall_data.three_label_logit[1] }}
-          </div>
-        </div>
-      {% else %}
-         <div class="logit_box last_logit_box">
-            <div class="logit_label">
-              Disagree
-            </div>
-            <div class="logit_val">
-              {{ data.overall_data.three_label_logit[1] }}
-            </div>
-          </div>
-      {% endif %}
-    {% endif %}
+    <div class="key_label">Disagree</div>
+    <div class="key_box red1">weakly</div> 
+    <div class="key_box red2"></div> 
+    <div class="key_box red3"></div> 
+    <div class="key_box red4"></div>
+    <div class="key_box last_key_box red5">strongly</div>
+    <br>
+    <br>
   </div>
-  <br>
 
-  <h2> Sentence Level Analysis </h2>
-  {% for datum in data.sentence_data %}
-    <p><b>Sentence:</b> {{ datum.sentence }}</p>
-
+  <h2> Overall Prediction </h2>
+  <div>
+    <p><b>Claim:</b> {{ data.overall_data.claim }}</p>
+    <p><b>Document:</b> {{ data.overall_data.document }}</p>
+    <!--<p><b>Related Unrelated Pred:</b> {{ data.overall_data.related_unrelated_pred }}</p>-->
     <div class="prediction"> 
-      <div>
+      <div class={{ data.overall_data.color }}>
         <b>Predicted Stance:</b>
-        {% if datum.related_unrelated_pred == "Unrelated" %}
-          {{ datum.related_unrelated_pred }}
+        {% if data.overall_data.related_unrelated_pred == "Unrelated" %}
+          {{ data.overall_data.related_unrelated_pred }}
         {% else %}
-          {{ datum.three_label_pred }}
+          {{ data.overall_data.three_label_pred }}
         {% endif %}
       </div>
     </div> 
-
-    <div class="logits">
-      {% if datum.related_unrelated_pred == "Unrelated" %}
-        <div class="logit_box bold">
+    
+    <div class="logits">  
+      {% if data.overall_data.related_unrelated_pred == "Unrelated" %}
+      <div class="logit_box bold {{ data.overall_data.logit_colors[1] }}">
           <div class="logit_label">
             Unrelated
           </div>
           <div class="logit_val">
-            {{ datum.related_unrelated_logit[1] }}
+            {{ data.overall_data.related_unrelated_logit[1] }}
           </div>
         </div>
         {% else %}
-        <div class="logit_box">
+        <div class="logit_box {{ data.overall_data.logit_colors[1] }}">
           <div class="logit_label">
             Unrelated
           </div>
           <div class="logit_val">
-            {{ datum.related_unrelated_logit[1] }}
+            {{ data.overall_data.related_unrelated_logit[1] }}
           </div>
         </div>
       {% endif %}
-
-      {% if datum.related_unrelated_pred == "Related" %}
+   
+      {% if data.overall_data.related_unrelated_pred == "Related" %}
         <div class="logit_box last_logit_box bold">
           <div class="logit_label">
             Related
           </div>
           <div class="logit_val">
-            {{ datum.related_unrelated_logit[0] }}
+            {{ data.overall_data.related_unrelated_logit[0] }}
           </div>
         </div>
         {% else %}
@@ -175,77 +93,202 @@
             Related
           </div>
           <div class="logit_val">
-            {{ datum.related_unrelated_logit[0] }}
+            {{ data.overall_data.related_unrelated_logit[0] }}
           </div>
         </div>
       {% endif %}
 
-      {% if datum.related_unrelated_pred == "Related" %}
+      {% if data.overall_data.related_unrelated_pred == "Related" %}
         <div class="logit_box" id="empty_box">
         </div>
-       
-        {% if datum.three_label_pred == "Agree" %} 
-          <div class="logit_box bold">
+        
+        {% if data.overall_data.three_label_pred == "Agree" %}
+          <div class="logit_box bold {{ data.overall_data.logit_colors[2] }}">
             <div class="logit_label">
               Agree
             </div>
             <div class="logit_val">
-              {{ datum.three_label_logit[0] }}
+              {{ data.overall_data.three_label_logit[0] }}
             </div>
           </div>
         {% else %}
-          <div class="logit_box">
+          <div class="logit_box {{ data.overall_data.logit_colors[2] }}">
             <div class="logit_label">
               Agree
             </div>
             <div class="logit_val">
-              {{ datum.three_label_logit[0] }}
+              {{ data.overall_data.three_label_logit[0] }}
             </div>
           </div>
         {% endif %}
-       
-        {% if datum.three_label_pred == "Discuss" %} 
-          <div class="logit_box bold">
+
+        {% if data.overall_data.three_label_pred == "Discuss" %}
+          <div class="logit_box bold {{ data.overall_data.logit_colors[4] }}"">
             <div class="logit_label">
               Discuss
             </div>
             <div class="logit_val">
-              {{ datum.three_label_logit[2] }}
+              {{ data.overall_data.three_label_logit[2] }}
             </div>
           </div>
         {% else %}
-          <div class="logit_box">
+          <div class="logit_box {{ data.overall_data.logit_colors[4] }}"">
             <div class="logit_label">
               Discuss
             </div>
             <div class="logit_val">
-              {{ datum.three_label_logit[2] }}
+              {{ data.overall_data.three_label_logit[2] }}
             </div>
           </div>
         {% endif %}
         
-        {% if datum.three_label_pred == "Disagree" %} 
-          <div class="logit_box last_logit_box bold">
+        {% if data.overall_data.three_label_pred == "Disagree" %}
+          <div class="logit_box last_logit_box bold {{ data.overall_data.logit_colors[3] }}"">
             <div class="logit_label">
               Disagree
             </div>
             <div class="logit_val">
-              {{ datum.three_label_logit[1] }}
+              {{ data.overall_data.three_label_logit[1] }}
             </div>
           </div>
         {% else %}
-          <div class="logit_box last_logit_box">
-            <div class="logit_label">
-              Disagree
+           <div class="logit_box last_logit_box {{ data.overall_data.logit_colors[3] }}">
+              <div class="logit_label">
+                Disagree
+              </div>
+              <div class="logit_val">
+                {{ data.overall_data.three_label_logit[1] }}
+              </div>
             </div>
-            <div class="logit_val">
-              {{ datum.three_label_logit[1] }}
-            </div>
-          </div>
         {% endif %}
       {% endif %}
     </div>
+  </div>
+  <br>
 
+  <h2> Sentence Level Analysis </h2>
+  {% for datum in data.sentence_data %}
+    <div>
+      <p><b>Sentence:</b> {{ datum.sentence }}</p>
+
+      <div class="prediction"> 
+        <div class={{ datum.color }}>
+          <b>Predicted Stance:</b>
+          {% if datum.related_unrelated_pred == "Unrelated" %}
+            {{ datum.related_unrelated_pred }}
+          {% else %}
+            {{ datum.three_label_pred }}
+          {% endif %}
+        </div>
+      </div> 
+
+      <div class="logits">
+        {% if datum.related_unrelated_pred == "Unrelated" %}
+          <div class="logit_box bold {{ datum.logit_colors[1] }}">
+            <div class="logit_label">
+              Unrelated
+            </div>
+            <div class="logit_val">
+              {{ datum.related_unrelated_logit[1] }}
+            </div>
+          </div>
+          {% else %}
+          <div class="logit_box {{ datum.logit_colors[1] }}">
+            <div class="logit_label">
+              Unrelated
+            </div>
+            <div class="logit_val">
+              {{ datum.related_unrelated_logit[1] }}
+            </div>
+          </div>
+        {% endif %}
+
+        {% if datum.related_unrelated_pred == "Related" %}
+          <div class="logit_box last_logit_box bold">
+            <div class="logit_label">
+              Related
+            </div>
+            <div class="logit_val">
+              {{ datum.related_unrelated_logit[0] }}
+            </div>
+          </div>
+          {% else %}
+          <div class="logit_box last_logit_box">
+            <div class="logit_label">
+              Related
+            </div>
+            <div class="logit_val">
+              {{ datum.related_unrelated_logit[0] }}
+            </div>
+          </div>
+        {% endif %}
+
+        {% if datum.related_unrelated_pred == "Related" %}
+          <div class="logit_box" id="empty_box">
+          </div>
+         
+          {% if datum.three_label_pred == "Agree" %} 
+            <div class="logit_box bold {{ datum.logit_colors[2] }}">
+              <div class="logit_label">
+                Agree
+              </div>
+              <div class="logit_val">
+                {{ datum.three_label_logit[0] }}
+              </div>
+            </div>
+          {% else %}
+            <div class="logit_box {{ datum.logit_colors[2] }}">
+              <div class="logit_label">
+                Agree
+              </div>
+              <div class="logit_val">
+                {{ datum.three_label_logit[0] }}
+              </div>
+            </div>
+          {% endif %}
+         
+          {% if datum.three_label_pred == "Discuss" %} 
+            <div class="logit_box bold {{ datum.logit_colors[4] }}">
+              <div class="logit_label">
+                Discuss
+              </div>
+              <div class="logit_val">
+                {{ datum.three_label_logit[2] }}
+              </div>
+            </div>
+          {% else %}
+            <div class="logit_box {{ datum.logit_colors[4] }}"">
+              <div class="logit_label">
+                Discuss
+              </div>
+              <div class="logit_val">
+                {{ datum.three_label_logit[2] }}
+              </div>
+            </div>
+          {% endif %}
+          
+          {% if datum.three_label_pred == "Disagree" %} 
+          <div class="logit_box last_logit_box bold {{ datum.logit_colors[3] }}">
+              <div class="logit_label">
+                Disagree
+              </div>
+              <div class="logit_val">
+                {{ datum.three_label_logit[1] }}
+              </div>
+            </div>
+          {% else %}
+            <div class="logit_box last_logit_box {{ datum.logit_colors[3] }}">
+              <div class="logit_label">
+                Disagree
+              </div>
+              <div class="logit_val">
+                {{ datum.three_label_logit[1] }}
+              </div>
+            </div>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
     <br>
   {% endfor %}
 {% endblock content %}
