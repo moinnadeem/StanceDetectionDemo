@@ -143,7 +143,7 @@
         {% endif %}
         
         {% if data.overall_data.three_label_pred == "Disagree" %}
-          <div class="logit_box last_logit_box bold {{ data.overall_data.logit_colors[3] }}"">
+          <div class="logit_box last_logit_box bold {{ data.overall_data.logit_colors[3] }}">
             <div class="logit_label">
               Disagree
             </div>
@@ -167,6 +167,7 @@
   <br>
 
   <h2> Sentence Level Analysis </h2>
+  <p> While the described in the dataset does not do sentence by sentence analysis, for this demo the model also applied using each sentence as a document. In this way, we can get an idea of what sentences the model believed to justify its label prediction. </p>
   {% for datum in data.sentence_data %}
     <div>
       <p><b>Sentence:</b> {{ datum.sentence }}</p>
