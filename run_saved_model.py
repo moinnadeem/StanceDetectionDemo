@@ -10,6 +10,9 @@ from util import print_model_results, get_prediction_accuracies, get_composite_s
         get_body_sentences
 
 def load_vectorizers():
+    '''
+    Load the BOW, TFREQ, and TFIDF vectorizers from pickle files.
+    '''
     bow_vectorizer = pickle.load(open(var.PICKLE_SAVE_FOLDER + "bow_vectorizer.pickle", "rb")) 
     tfreq_vectorizer = pickle.load(open(var.PICKLE_SAVE_FOLDER + "tfreq_vectorizer.pickle", "rb"))
     tfidf_vectorizer = pickle.load(open(var.PICKLE_SAVE_FOLDER + "tfidf_vectorizer.pickle", "rb"))
@@ -18,6 +21,11 @@ def load_vectorizers():
 
 
 def load_tokenizer():
+    '''
+    Load the word index, which maps numbers to words, and initialize a tokenizer with
+    that word index. This function takes advantage of the fact that the tokenizer will
+    assign words to numbers based on the order in which it sees the words.
+    '''
     word_index = np.load(var.PICKLE_SAVE_FOLDER + "word_index.npy").item()
 
     # initialize tokenizer from word_index
@@ -32,6 +40,11 @@ def load_tokenizer():
 
 
 def process_input(claim, document, bow_vectorizer, tfreq_vectorizer, tfidf_vectorizer, tokenizer):
+    '''
+    Given claim text and document text, prepare the input so that it can be passed into the model.
+    In particular, TF/TFIDF features are extracted and the inputs are also converted into arrays of word embeddings
+    corresponding to the original claim and document.
+    '''
     # Parse document into sentences
     document_sentences = get_body_sentences([document])[0]
     documents = [document] + document_sentences
@@ -55,10 +68,17 @@ def process_input(claim, document, bow_vectorizer, tfreq_vectorizer, tfidf_vecto
 
 
 def load_embedding_matrix():
+    '''
+    Loads the embedding matrix from the pretrained model.
+    '''
     return np.load(var.PICKLE_SAVE_FOLDER + "embedding_matrix.npy")
 
 
 def run_model(claim_doc_feat_vectors, claim_seqs_padded, document_seqs_padded, embedding_matrix, claims, documents):
+    '''
+    Loads the pretrained tensorflow modeland passes in the desired inputs. The label predictions and logits
+    associated with those predictions are returned in the response.
+    '''
     num_data = len(claim_doc_feat_vectors)
 
     # dummy stances and domains for model
@@ -190,6 +210,10 @@ def run_model(claim_doc_feat_vectors, claim_seqs_padded, document_seqs_padded, e
 
 
 def run_model_main(claim, document):
+    '''
+    Function which encapsulates the complete process of taking an input claim and document and retrieving relevant
+    predictions from a pretrained model. Uses all helper functions defined above to complete the task.
+    '''
     bow_vectorizer, tfreq_vectorizer, tfidf_vectorizer = load_vectorizers()
     tokenizer = load_tokenizer()
     claim_doc_feat_vectors, claim_seqs_padded, document_seqs_padded, claims, documents = process_input(claim, document, bow_vectorizer, tfreq_vectorizer, tfidf_vectorizer, tokenizer)
@@ -197,15 +221,4 @@ def run_model_main(claim, document):
     response = run_model(claim_doc_feat_vectors, claim_seqs_padded, document_seqs_padded, embedding_matrix, claims, documents)
     return response
 
-
-if __name__ == "__main__":
-    claim = "There are 305 breeds of domestic rabbit in the world"
-    document = "Rabbits are small mammals in the family Leporidae of the order Lagomorpha (along with the hare and the pika). Oryctolagus cuniculus includes the European rabbit species and its descendants, the world's 305 breeds of domestic rabbit. Sylvilagus includes thirteen wild rabbit species, among them the seven types of cottontail. The European rabbit, which has been introduced on every continent except Antarctica, is familiar throughout the world as a wild prey animal and as a domesticated form of livestock and pet. With its widespread effect on ecologies and cultures, the rabbit (or bunny) is, in many areas of the world, a part of daily life—as food, clothing, and companion, and as a source of artistic inspiration."
-
-    bow_vectorizer, tfreq_vectorizer, tfidf_vectorizer = load_vectorizers()
-    tokenizer = load_tokenizer()
-    claim_doc_feat_vectors, claim_seqs_padded, document_seqs_padded, claims, documents = process_input(claim, document, bow_vectorizer, tfreq_vectorizer, tfidf_vectorizer, tokenizer)
-    embedding_matrix = load_embedding_matrix()
-    run_model(claim_doc_feat_vectors, claim_seqs_padded, document_seqs_padded, embedding_matrix, claims, documents)  
-    
 

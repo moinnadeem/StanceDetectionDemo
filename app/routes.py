@@ -17,6 +17,10 @@ def index():
 
 
 def parse_response(response):
+  '''
+  Given the response from the saved model as provided in run_saved_model.py, this function parses that response
+  and reshapes it into a form which is easily consumable by the templates.
+  '''
   data = {}
 
   data['overall_data'] = {
@@ -48,10 +52,17 @@ def parse_response(response):
 
 
 def round_decimals(logits):
+    '''
+    Rounds a list of numbers to the nearest hundreth. 
+    '''
     return [round(logit, 2) for logit in logits]
 
 
 def determine_color(rulogits, addlogits):
+    '''
+    Based on the related/unrelated logits and the agree/disagree/discuss logits, this function determines
+    the appropriate color and intensity associated with the related text.
+    '''
     colors = get_logit_colors(rulogits + addlogits)
     if rulogits[1] >= rulogits[0]:
         return colors[1]
@@ -68,9 +79,16 @@ def determine_color(rulogits, addlogits):
                 return colors[4]
     
 def intensity(logit):
+    '''
+    Defines 5 intensity buckets uniformly distributed from 0 to 1.
+    '''
     return int(logit//0.2) + 1;
 
 def get_logit_colors(logits):
+    '''
+    Given a set of logits, assumed to be in the related, unrelated, agree, disagree, discuss order, the appropriate
+    color and intensity combinations to represent the results are calculated.
+    '''
     # related, unrelated, agree, disagree, discuss
     base_colors = [None, "grey", 'blue', 'red', 'purple']
     colors = []

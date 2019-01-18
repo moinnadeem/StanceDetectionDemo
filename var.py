@@ -1,3 +1,5 @@
+# Variables used to load the saved model. Not all variables are strictly necessary
+
 # Data processing save parameters
 PICKLE_FOLDER_NAME = "fnc_fever_3"
 PICKLE_SAVE_FOLDER = "pickle_data/" + PICKLE_FOLDER_NAME + "/"
