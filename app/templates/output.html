@@ -44,7 +44,20 @@
   <h2> Overall Prediction </h2>
   <div>
     <p><b>Claim:</b> {{ data.overall_data.claim }}</p>
-    <p><b>Document:</b> {{ data.overall_data.document }}</p>
+    <p>
+      <b>Document:</b>
+      {% for datum in data.sentence_data %}
+        {% if datum.color[:-1] == data.overall_data.color[:-1] %}
+          <div class={{ datum.color }}>
+            {{ datum.sentence }}
+          </div>
+        {% else %}
+          <div>
+            {{ datum.sentence }}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </p>
     <!--<p><b>Related Unrelated Pred:</b> {{ data.overall_data.related_unrelated_pred }}</p>-->
     <div class="prediction"> 
       <div class={{ data.overall_data.color }}>

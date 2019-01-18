@@ -13,7 +13,7 @@ def index():
     data = parse_response(response)
     return render_template('output.html', data=data)
   else:
-    return "OOPS"
+    return "ERROR NOT SUPPORTED"
 
 
 def parse_response(response):
@@ -46,8 +46,10 @@ def parse_response(response):
 
   return data;
 
+
 def round_decimals(logits):
     return [round(logit, 2) for logit in logits]
+
 
 def determine_color(rulogits, addlogits):
     colors = get_logit_colors(rulogits + addlogits)
