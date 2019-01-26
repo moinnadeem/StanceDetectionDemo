@@ -216,8 +216,8 @@ def run_model_main(claim, document):
     '''
     bow_vectorizer, tfreq_vectorizer, tfidf_vectorizer = load_vectorizers()
     tokenizer = load_tokenizer()
-    claim_doc_feat_vectors, claim_seqs_padded, document_seqs_padded, claims, documents = process_input(claim, document, bow_vectorizer, tfreq_vectorizer, tfidf_vectorizer, tokenizer)
     embedding_matrix = load_embedding_matrix()
+    claim_doc_feat_vectors, claim_seqs_padded, document_seqs_padded, claims, documents = process_input(claim, document, bow_vectorizer, tfreq_vectorizer, tfidf_vectorizer, tokenizer)
     response = run_model(claim_doc_feat_vectors, claim_seqs_padded, document_seqs_padded, embedding_matrix, claims, documents)
     return response
 
