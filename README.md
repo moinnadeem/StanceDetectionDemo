@@ -1,7 +1,7 @@
 # Demo
 
 This demo is used to serve our state of the art stance detection model as tested on the Fake News Challenge.
-The details about the model are discussed in a short paper which is linked [here]{https://marcpickett.com/cl2018/CL-2018_paper_29.pdf}.
+The details about the model are discussed in a short paper which is linked [here](https://marcpickett.com/cl2018/CL-2018_paper_29.pdf).
 These results were presented at the 2018 NIPS Continual Learning Workshop.
 
 ## Code Structure
