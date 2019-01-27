@@ -8,7 +8,7 @@ import json
 import numpy as np
 import tensorflow as tf
 import unicodedata
-import var
+from . import var
 
 from csv import DictReader, DictWriter
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer, TfidfVectorizer

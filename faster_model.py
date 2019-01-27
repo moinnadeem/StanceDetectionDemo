@@ -1,24 +1,36 @@
-from run_saved_model import *
-import var
+from os import path
+import gc
+
+from .run_saved_model import *
+from . import var
+
+config = tf.ConfigProto()
+config.gpu_options.allow_growth=True
 
 bow_vectorizer, tfreq_vectorizer, tfidf_vectorizer = load_vectorizers()
 tokenizer = load_tokenizer()
 embedding_matrix = load_embedding_matrix()
+current_dir = path.dirname(path.realpath(__file__))
 
 graph1 = tf.Graph()
 graph2 = tf.Graph()
 
-sess1 = tf.Session()
-saver = tf.train.import_meta_graph(var.RELATED_UNRELATED_MODEL_PATH + ".meta")
-saver.restore(sess1, tf.train.latest_checkpoint(var.RELATED_UNRELATED_MODEL_FOLDER))
+sess1 = tf.Session(config=config)
+related_location = path.join(current_dir, var.RELATED_UNRELATED_MODEL_PATH) 
+saver = tf.train.import_meta_graph(related_location + ".meta")
+related_location = path.join(current_dir, var.RELATED_UNRELATED_MODEL_FOLDER) 
+saver.restore(sess1, tf.train.latest_checkpoint(related_location))
 graph1 = tf.get_default_graph()
 
-sess2 = tf.Session(graph=graph2)
+sess2 = tf.Session(graph=graph2, config=config)
 # Load 3 label model
 # with tf.Session(graph=graph2) as sess2:
 sess2.__enter__()
-saver = tf.train.import_meta_graph(var.THREE_LABEL_MODEL_PATH + ".meta")
-saver.restore(sess2, tf.train.latest_checkpoint(var.THREE_LABEL_MODEL_FOLDER))
+three_location = path.join(current_dir, var.THREE_LABEL_MODEL_PATH) 
+saver = tf.train.import_meta_graph(three_location + ".meta")
+
+three_location = path.join(current_dir, var.THREE_LABEL_MODEL_FOLDER) 
+saver.restore(sess2, tf.train.latest_checkpoint(three_location))
 graph2 = tf.get_default_graph()
 
 def run_model(claim_doc_feat_vectors, claim_seqs_padded, document_seqs_padded, embedding_matrix, claims, documents):

@@ -1,11 +1,12 @@
 import numpy as np
 import tensorflow as tf
-import var
+from . import var
 import pickle
+from os import path
 from keras.preprocessing.sequence import pad_sequences
 from keras.preprocessing.text import Tokenizer
 
-from util import print_model_results, get_prediction_accuracies, get_composite_score, \
+from .util import print_model_results, get_prediction_accuracies, get_composite_score, \
         get_f1_scores, save_predictions, get_feature_vectors, remove_stop_words, \
         get_body_sentences
 
@@ -13,12 +14,15 @@ def load_vectorizers():
     '''
     Load the BOW, TFREQ, and TFIDF vectorizers from pickle files.
     '''
-    bow_vectorizer = pickle.load(open(var.PICKLE_SAVE_FOLDER + "bow_vectorizer.pickle", "rb")) 
-    tfreq_vectorizer = pickle.load(open(var.PICKLE_SAVE_FOLDER + "tfreq_vectorizer.pickle", "rb"))
-    tfidf_vectorizer = pickle.load(open(var.PICKLE_SAVE_FOLDER + "tfidf_vectorizer.pickle", "rb"))
+    current_dir = path.dirname(path.realpath(__file__))
+    bow_location = path.join(current_dir, var.PICKLE_SAVE_FOLDER, "bow_vectorizer.pickle")
+    bow_vectorizer = pickle.load(open(bow_location, "rb")) 
+    tfreq_location = path.join(current_dir, var.PICKLE_SAVE_FOLDER, "tfreq_vectorizer.pickle")
+    tfreq_vectorizer = pickle.load(open(tfreq_location, "rb"))
+    tfidf_location = path.join(current_dir, var.PICKLE_SAVE_FOLDER, "tfidf_vectorizer.pickle")
+    tfidf_vectorizer = pickle.load(open(tfidf_location, "rb"))
     
     return bow_vectorizer, tfreq_vectorizer, tfidf_vectorizer
-
 
 def load_tokenizer():
     '''
@@ -26,7 +30,9 @@ def load_tokenizer():
     that word index. This function takes advantage of the fact that the tokenizer will
     assign words to numbers based on the order in which it sees the words.
     '''
-    word_index = np.load(var.PICKLE_SAVE_FOLDER + "word_index.npy").item()
+    current_dir = path.dirname(path.realpath(__file__))
+    word_location = path.join(current_dir, var.PICKLE_SAVE_FOLDER, "word_index.npy")
+    word_index = np.load(word_location).item()
 
     # initialize tokenizer from word_index
     words = [(word, word_index[word]) for word in word_index]
@@ -71,7 +77,9 @@ def load_embedding_matrix():
     '''
     Loads the embedding matrix from the pretrained model.
     '''
-    return np.load(var.PICKLE_SAVE_FOLDER + "embedding_matrix.npy")
+    current_dir = path.dirname(path.realpath(__file__))
+    matrix_location = path.join(current_dir, var.PICKLE_SAVE_FOLDER, "embedding_matrix.npy")
+    return np.load(matrix_location)
 
 
 def run_model(claim_doc_feat_vectors, claim_seqs_padded, document_seqs_padded, embedding_matrix, claims, documents):
